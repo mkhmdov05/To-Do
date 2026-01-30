@@ -5,6 +5,8 @@ class TodoStorage {
     this.version = 1;
     this.storeName = 'todos';
     this.db = null;
+    suiii 
+
   }
 
   async init() {
