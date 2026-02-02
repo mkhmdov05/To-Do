@@ -30,10 +30,10 @@ const useTodos = () => {
   const addTodo = useCallback(async (todoData) => {
     try {
       const newTodo = {
-        id: Date.now().toString(),
+        id: todoData.id || Date.now().toString(), // Use provided ID or generate new one
         ...todoData,
-        completed: false,
-        createdAt: new Date().toISOString(),
+        completed: todoData.completed || false,
+        createdAt: todoData.createdAt || new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
 

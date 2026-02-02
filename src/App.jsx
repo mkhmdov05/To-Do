@@ -3,6 +3,10 @@ import TodoForm from './components/TodoForm';
 import TodoList from './components/TodoList';
 import TodoFilters from './components/TodoFilters';
 import TodoStats from './components/TodoStats';
+import SearchBar from './components/SearchBar';
+import SmartSections from './components/SmartSections';
+import UndoNotification from './components/UndoNotification';
+import UpdateNotification from './components/UpdateNotification';
 import useTodos from './hooks/useTodos';
 import { getFilteredAndSortedTodos } from './utils/todoUtils';
 
@@ -13,6 +17,10 @@ function App() {
   const [sortOrder, setSortOrder] = useState('desc');
   const [editingTodo, setEditingTodo] = useState(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [viewMode, setViewMode] = useState('list');
+  const [deletedTodo, setDeletedTodo] = useState(null);
+  const [showUpdateNotification, setShowUpdateNotification] = useState(false);
 
   // Handle online/offline status
   useEffect(() => {
@@ -28,7 +36,7 @@ function App() {
     };
   }, []);
 
-  // Handle PWA install prompt
+  // Handle PWA install prompt and updates
   useEffect(() => {
     let deferredPrompt;
 
@@ -39,11 +47,7 @@ function App() {
       // Show install button or banner
       const installButton = document.createElement('button');
       installButton.textContent = 'Install App';
-      installButton.className = 'btn btn-primary';
-      installButton.style.position = 'fixed';
-      installButton.style.bottom = '20px';
-      installButton.style.right = '20px';
-      installButton.style.zIndex = '1000';
+      installButton.className = 'btn btn-primary install-prompt';
       
       installButton.addEventListener('click', async () => {
         if (deferredPrompt) {
@@ -93,16 +97,56 @@ function App() {
   };
 
   const handleDeleteTodo = async (id) => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
-      try {
-        await deleteTodo(id);
-      } catch (err) {
-        console.error('Failed to delete todo:', err);
-      }
+    const todoToDelete = todos.find(t => t.id === id);
+    if (!todoToDelete) return;
+
+    try {
+      await deleteTodo(id);
+      setDeletedTodo(todoToDelete);
+    } catch (err) {
+      console.error('Failed to delete todo:', err);
     }
   };
 
-  const filteredAndSortedTodos = getFilteredAndSortedTodos(todos, filter, sortBy, sortOrder);
+  const handleUndoDelete = async () => {
+    if (!deletedTodo) return;
+    
+    try {
+      // Create a new todo with the same data but ensure it's treated as new
+      const restoredTodo = {
+        ...deletedTodo,
+        // Remove the original ID to let the system generate a new one
+        // This prevents conflicts if the same ID was reused
+      };
+      delete restoredTodo.id;
+      
+      await addTodo(restoredTodo);
+      setDeletedTodo(null);
+    } catch (err) {
+      console.error('Failed to restore todo:', err);
+    }
+  };
+
+  const handleDismissUndo = () => {
+    setDeletedTodo(null);
+  };
+
+  const handleUpdateApp = () => {
+    window.location.reload();
+    setShowUpdateNotification(false);
+  };
+
+  const handleDismissUpdate = () => {
+    setShowUpdateNotification(false);
+  };
+
+  const filteredAndSortedTodos = getFilteredAndSortedTodos(
+    todos, 
+    filter, 
+    sortBy, 
+    sortOrder, 
+    searchTerm
+  );
 
   if (loading) {
     return (
@@ -147,6 +191,11 @@ function App() {
 
       <TodoStats todos={todos} />
 
+      <SearchBar 
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+      />
+
       <TodoForm
         onSubmit={editingTodo ? handleUpdateTodo : handleAddTodo}
         editingTodo={editingTodo}
@@ -160,13 +209,36 @@ function App() {
         onSortChange={setSortBy}
         sortOrder={sortOrder}
         onSortOrderChange={setSortOrder}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
       />
 
-      <TodoList
-        todos={filteredAndSortedTodos}
-        onToggle={toggleTodo}
-        onEdit={handleEditTodo}
-        onDelete={handleDeleteTodo}
+      {viewMode === 'sections' ? (
+        <SmartSections
+          todos={filteredAndSortedTodos}
+          onToggle={toggleTodo}
+          onEdit={handleEditTodo}
+          onDelete={handleDeleteTodo}
+        />
+      ) : (
+        <TodoList
+          todos={filteredAndSortedTodos}
+          onToggle={toggleTodo}
+          onEdit={handleEditTodo}
+          onDelete={handleDeleteTodo}
+        />
+      )}
+
+      <UndoNotification
+        deletedTodo={deletedTodo}
+        onUndo={handleUndoDelete}
+        onDismiss={handleDismissUndo}
+      />
+
+      <UpdateNotification
+        showUpdate={showUpdateNotification}
+        onUpdate={handleUpdateApp}
+        onDismiss={handleDismissUpdate}
       />
     </div>
   );

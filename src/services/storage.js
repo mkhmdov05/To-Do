@@ -27,6 +27,7 @@ class TodoStorage {
           store.createIndex('priority', 'priority', { unique: false });
           store.createIndex('deadline', 'deadline', { unique: false });
           store.createIndex('createdAt', 'createdAt', { unique: false });
+          store.createIndex('notes', 'notes', { unique: false });
         }
       };
     });

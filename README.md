@@ -9,8 +9,12 @@ A fully functional Todo application built as a Progressive Web App (PWA) with of
 - ✅ **Task Status**: Mark tasks as completed or active
 - ✅ **Priority Levels**: Low, Medium, High priority settings
 - ✅ **Deadlines**: Set due dates for tasks
+- ✅ **Task Notes**: Add optional descriptions/notes to tasks
+- ✅ **Search**: Find tasks by title or notes content
 - ✅ **Filtering**: View all, active, or completed tasks
 - ✅ **Sorting**: Sort by date, priority, title, or deadline
+- ✅ **Smart Sections**: Organize tasks by Overdue, Today, Upcoming
+- ✅ **Undo Delete**: Restore accidentally deleted tasks
 - ✅ **Statistics**: View task counts and overdue items
 
 ### PWA Features
@@ -20,6 +24,8 @@ A fully functional Todo application built as a Progressive Web App (PWA) with of
 - ✅ **Responsive Design**: Mobile-first, works on all screen sizes
 - ✅ **Service Worker**: Caches assets for offline use
 - ✅ **Web App Manifest**: Proper PWA configuration
+- ✅ **Update Notifications**: Alerts when new version is available
+- ✅ **Install Prompts**: Automatic "Add to Home Screen" prompts
 
 ### Technical Features
 - ✅ **React + Vite**: Modern development stack
@@ -123,15 +129,19 @@ Data persists across browser sessions and survives page reloads.
 1. Enter task title in the form
 2. Select priority level (Low/Medium/High)
 3. Optionally set a deadline
-4. Click "Add Task"
+4. Add notes/description if needed
+5. Click "Add Task"
 
 ### Managing Tasks
 - **Complete**: Check the checkbox next to any task
 - **Edit**: Click "Edit" button (disabled for completed tasks)
-- **Delete**: Click "Delete" button with confirmation
+- **Delete**: Click "Delete" button - shows undo option for 5 seconds
+- **Search**: Use the search bar to find tasks by title or notes
 
-### Filtering & Sorting
-- **Filter**: Use "All", "Active", or "Completed" buttons
+### Viewing Tasks
+- **List View**: Traditional list with sorting options
+- **Smart Sections**: Organized by Overdue, Today, Upcoming, No Deadline
+- **Filtering**: Use "All", "Active", or "Completed" buttons
 - **Sort**: Choose sort criteria and order (ascending/descending)
 
 ### Offline Usage

@@ -4,7 +4,8 @@ const TodoForm = ({ onSubmit, editingTodo, onCancel }) => {
   const [formData, setFormData] = useState({
     title: '',
     priority: 'medium',
-    deadline: ''
+    deadline: '',
+    notes: ''
   });
 
   useEffect(() => {
@@ -12,13 +13,15 @@ const TodoForm = ({ onSubmit, editingTodo, onCancel }) => {
       setFormData({
         title: editingTodo.title,
         priority: editingTodo.priority,
-        deadline: editingTodo.deadline || ''
+        deadline: editingTodo.deadline || '',
+        notes: editingTodo.notes || ''
       });
     } else {
       setFormData({
         title: '',
         priority: 'medium',
-        deadline: ''
+        deadline: '',
+        notes: ''
       });
     }
   }, [editingTodo]);
@@ -39,7 +42,8 @@ const TodoForm = ({ onSubmit, editingTodo, onCancel }) => {
       setFormData({
         title: '',
         priority: 'medium',
-        deadline: ''
+        deadline: '',
+        notes: ''
       });
     }
   };
@@ -92,6 +96,20 @@ const TodoForm = ({ onSubmit, editingTodo, onCancel }) => {
             onChange={handleChange}
             className="form-input"
             min={new Date().toISOString().split('T')[0]}
+          />
+        </div>
+      </div>
+      <div className="form-row">
+        <div className="form-group">
+          <label htmlFor="notes">Notes (Optional)</label>
+          <textarea
+            id="notes"
+            name="notes"
+            value={formData.notes}
+            onChange={handleChange}
+            placeholder="Add any additional notes..."
+            className="form-input"
+            rows="3"
           />
         </div>
       </div>

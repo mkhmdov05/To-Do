@@ -31,6 +31,11 @@ const TodoItem = ({ todo, onToggle, onEdit, onDelete }) => {
         <h3 className={`todo-title ${todo.completed ? 'completed' : ''}`}>
           {todo.title}
         </h3>
+        {todo.notes && (
+          <p className="todo-notes">
+            {todo.notes}
+          </p>
+        )}
         <div className="todo-meta">
           <span className={getPriorityClass(todo.priority)}>
             {todo.priority}

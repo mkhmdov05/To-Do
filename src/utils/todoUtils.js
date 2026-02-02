@@ -11,6 +11,16 @@ export const filterTodos = (todos, filter) => {
   }
 };
 
+export const searchTodos = (todos, searchTerm) => {
+  if (!searchTerm.trim()) return todos;
+  
+  const term = searchTerm.toLowerCase();
+  return todos.filter(todo => 
+    todo.title.toLowerCase().includes(term) ||
+    (todo.notes && todo.notes.toLowerCase().includes(term))
+  );
+};
+
 export const sortTodos = (todos, sortBy, sortOrder = 'asc') => {
   const sortedTodos = [...todos].sort((a, b) => {
     let aValue, bValue;
@@ -49,7 +59,8 @@ export const sortTodos = (todos, sortBy, sortOrder = 'asc') => {
   return sortedTodos;
 };
 
-export const getFilteredAndSortedTodos = (todos, filter, sortBy, sortOrder) => {
-  const filtered = filterTodos(todos, filter);
+export const getFilteredAndSortedTodos = (todos, filter, sortBy, sortOrder, searchTerm = '') => {
+  let filtered = filterTodos(todos, filter);
+  filtered = searchTodos(filtered, searchTerm);
   return sortTodos(filtered, sortBy, sortOrder);
 };

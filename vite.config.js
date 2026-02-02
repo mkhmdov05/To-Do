@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt',
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         runtimeCaching: [
@@ -43,6 +43,9 @@ export default defineConfig({
             type: 'image/png'
           }
         ]
+      },
+      devOptions: {
+        enabled: true
       }
     })
   ]
